@@ -25,24 +25,23 @@
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label class="form-label fw-bold">Property Name</label>
-                    <input v-model="form.name" type="text" class="form-control" required 
-                           placeholder="Enter property name">
+                    <input v-model="form.name" type="text" class="form-control" required
+                      placeholder="Enter property name" @input="saveFormDraft">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label class="form-label fw-bold">Monthly Rent (₱)</label>
-                    <input v-model.number="form.rent" type="number" class="form-control" required 
-                           placeholder="Enter monthly rent">
+                    <input v-model.number="form.rent" type="number" class="form-control" required
+                      placeholder="Enter monthly rent" @input="saveFormDraft">
                   </div>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label class="form-label fw-bold">Property Type</label>
-                    <select v-model="form.type" class="form-select" required>
+                    <select v-model="form.type" class="form-select" required @change="saveFormDraft">
                       <option value="">Select type</option>
                       <option v-for="type in propertyTypes" :key="type" :value="type">
                         {{ type }}
@@ -53,7 +52,7 @@
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label class="form-label fw-bold">Status</label>
-                    <select v-model="form.status" class="form-select" required>
+                    <select v-model="form.status" class="form-select" required @change="saveFormDraft">
                       <option value="Available">Available</option>
                       <option value="Occupied">Occupied</option>
                       <option value="Maintenance">Under Maintenance</option>
@@ -61,13 +60,11 @@
                   </div>
                 </div>
               </div>
-
               <div class="mb-3">
                 <label class="form-label fw-bold">Address</label>
-                <input v-model="form.address" type="text" class="form-control" 
-                       placeholder="Enter full address">
+                <input v-model="form.address" type="text" class="form-control"
+                  placeholder="Enter full address" @input="saveFormDraft">
               </div>
-
               <!-- Conditional fields based on status -->
               <div v-if="form.status === 'Occupied'" class="bg-light p-3 rounded mb-4">
                 <h6 class="fw-bold mb-3">Tenant Information</h6>
@@ -75,14 +72,14 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label class="form-label">Tenant Name</label>
-                      <input v-model="form.tenant" type="text" class="form-control" 
-                             :required="form.status === 'Occupied'">
+                      <input v-model="form.tenant" type="text" class="form-control"
+                        :required="form.status === 'Occupied'" @input="saveFormDraft">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label class="form-label">Tenant Email</label>
-                      <input v-model="form.tenantEmail" type="email" class="form-control">
+                      <input v-model="form.tenantEmail" type="email" class="form-control" @input="saveFormDraft">
                     </div>
                   </div>
                 </div>
@@ -91,25 +88,26 @@
                     <div class="mb-3">
                       <label class="form-label">Lease Start Date</label>
                       <input v-model="form.startDate" type="date" class="form-control"
-                             :required="form.status === 'Occupied'">
+                        :required="form.status === 'Occupied'" @change="saveFormDraft">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label class="form-label">Last Payment Date</label>
-                      <input v-model="form.lastPaid" type="date" class="form-control">
+                      <input v-model="form.lastPaid" type="date" class="form-control" @change="saveFormDraft">
                     </div>
                   </div>
                 </div>
               </div>
-
               <div class="mb-3">
                 <label class="form-label fw-bold">Description</label>
                 <textarea v-model="form.description" class="form-control" rows="3"
-                         placeholder="Describe the property features..."></textarea>
+                  placeholder="Describe the property features..." @input="saveFormDraft"></textarea>
               </div>
-
               <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-warning" @click="clearFormDraft" :disabled="loading">
+                  Clear Draft
+                </button>
                 <router-link to="/properties" class="btn btn-secondary">Cancel</router-link>
                 <button type="submit" class="btn btn-primary" :disabled="loading">
                   <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
@@ -134,8 +132,8 @@
                     <br>
                     <small class="text-muted">Type: {{ apiProp.type }}</small>
                   </div>
-                  <button class="btn btn-sm btn-outline-primary" 
-                         @click="useApiProperty(apiProp)">
+                  <button class="btn btn-sm btn-outline-primary"
+                    @click="useApiProperty(apiProp)">
                     Use This
                   </button>
                 </div>
@@ -191,6 +189,8 @@ watch(() => route.params.id, (newId) => {
 onMounted(() => {
   if (route.params.id) {
     loadPropertyForEdit()
+  } else {
+    loadFormDraft() // Load draft only for new properties, not edits
   }
   fetchSampleProperties()
 })
@@ -204,12 +204,47 @@ function loadPropertyForEdit() {
   }
 }
 
+// Load form draft from localStorage
+function loadFormDraft() {
+  const draft = localStorage.getItem('propertyFormDraft')
+  if (draft) {
+    const draftData = JSON.parse(draft)
+    form.value = { ...form.value, ...draftData }
+  }
+}
+
+// Save form draft to localStorage
+function saveFormDraft() {
+  if (!isEditing.value) { // Only save drafts for new properties, not edits
+    localStorage.setItem('propertyFormDraft', JSON.stringify(form.value))
+  }
+}
+
+// Clear form draft from localStorage
+function clearFormDraft() {
+  if (confirm('Are you sure you want to clear your draft? All unsaved changes will be lost.')) {
+    localStorage.removeItem('propertyFormDraft')
+    form.value = {
+      id: null,
+      name: '',
+      rent: 0,
+      type: '',
+      status: 'Available',
+      address: '',
+      tenant: '',
+      tenantEmail: '',
+      startDate: '',
+      lastPaid: '',
+      description: ''
+    }
+  }
+}
+
 async function fetchSampleProperties() {
   try {
     // Using JSONPlaceholder API for demo
     const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3')
     const data = await response.json()
-    
     // Transform API data to match our format
     apiProperties.value = data.map((item, index) => ({
       id: `api-${item.id}`,
@@ -226,14 +261,14 @@ function useApiProperty(apiProp) {
   form.value.name = apiProp.title
   form.value.type = apiProp.type
   form.value.rent = apiProp.rent
+  saveFormDraft() // Save after using API data
 }
 
 async function handleSubmit() {
   loading.value = true
-  
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 1000))
-  
+
   if (isEditing.value) {
     // UPDATE operation
     const index = propertyList.value.findIndex(p => p.id === form.value.id)
@@ -245,12 +280,15 @@ async function handleSubmit() {
     form.value.id = Date.now().toString()
     form.value.createdAt = new Date().toISOString()
     propertyList.value.push({ ...form.value })
+
+    // Clear draft after successful submission
+    localStorage.removeItem('propertyFormDraft')
   }
-  
+
   // Save to localStorage
   localStorage.setItem('properties', JSON.stringify(propertyList.value))
   loading.value = false
-  
+
   // Navigate to properties list
   router.push('/properties')
 }

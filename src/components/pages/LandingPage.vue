@@ -1,3 +1,5 @@
+<!--src/components/pages/LandingPage.vue -->
+
 <template>
   <div class="landing-page">
     <!-- Hero Section -->

@@ -1,3 +1,5 @@
+<!--src/components/pages/PropertyList.vue -->
+
 <template>
   <div class="property-list-page">
     <div class="container-full py-4">

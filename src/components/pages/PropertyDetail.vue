@@ -1,3 +1,5 @@
+<!--src/components/pages/PropertyDetail.vue -->
+
 <template>
   <div class="container py-4" v-if="property">
     <div class="d-flex align-items-center mb-4">
@@ -20,7 +22,7 @@
                 <p><strong>{{ detail.label }}:</strong> {{ detail.value }}</p>
               </div>
             </div>
-            
+
             <div v-if="property.description">
               <h6 class="fw-bold mt-4">Description</h6>
               <p class="text-muted">{{ property.description }}</p>
@@ -28,13 +30,13 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-lg-4">
         <div class="card shadow-sm border-0">
           <div class="card-body">
             <h6 class="fw-bold">Quick Actions</h6>
             <div class="d-grid gap-2">
-              <router-link :to="`/properties/edit/${property.id}`" 
+              <router-link :to="`/properties/edit/${property.id}`"
                          class="btn btn-primary">
                 <i class="bi bi-pencil me-2"></i>Edit Property
               </router-link>
@@ -47,7 +49,7 @@
       </div>
     </div>
   </div>
-  
+
   <div v-else class="container py-4">
     <div class="text-center">
       <i class="bi bi-exclamation-triangle display-1 text-muted"></i>
@@ -68,7 +70,7 @@ const property = ref(null)
 // Computed property for details
 const propertyDetails = computed(() => {
   if (!property.value) return []
-  
+
   return [
     { label: 'Monthly Rent', value: `₱${property.value.rent.toLocaleString()}` },
     { label: 'Property Type', value: property.value.type || 'Not specified' },
