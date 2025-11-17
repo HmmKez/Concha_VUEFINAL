@@ -5,11 +5,11 @@
         <i class="bi bi-house-door-fill me-2"></i>
         {{ brandName }}
       </router-link>
-      
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
+
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item mx-2" v-for="item in menuItems" :key="item.name">
@@ -19,7 +19,7 @@
             </router-link>
           </li>
         </ul>
-        
+
         <div class="d-flex align-items-center" v-if="showStats">
           <div class="rounded-pill px-3 py-1" :class="statsClass">
             <small>

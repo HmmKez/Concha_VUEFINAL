@@ -1,19 +1,19 @@
 <template>
   <div class="landing-page">
     <!-- Hero Section -->
-    <section class="bg-primary text-white py-5">
-      <div class="container">
-        <div class="row align-items-center min-vh-50">
-          <div class="col-lg-6">
-            <h1 class="display-5 fw-bold mb-4">Manage Your Rental Properties with Ease</h1>
+    <section class="bg-primary text-white">
+      <div class="container-full">
+        <div class="row align-items-center min-vh-70 py-5">
+          <div class="col-xl-6 col-lg-6">
+            <h1 class="display-4 fw-bold mb-4">Manage Your Rental Properties with Ease</h1>
             <p class="lead mb-4">Streamline your property management, track rentals, and grow your business with our comprehensive platform.</p>
-            <div class="d-flex gap-3">
-              <router-link to="/dashboard" class="btn btn-light btn-lg px-4">Get Started</router-link>
-              <router-link to="/properties" class="btn btn-outline-light btn-lg px-4">View Properties</router-link>
+            <div class="d-flex flex-wrap gap-3">
+              <router-link to="/dashboard" class="btn btn-light btn-lg px-4 py-2">Get Started</router-link>
+              <router-link to="/properties" class="btn btn-outline-light btn-lg px-4 py-2">View Properties</router-link>
             </div>
           </div>
-          <div class="col-lg-6 text-center">
-            <i class="bi bi-house-heart display-1"></i>
+          <div class="col-xl-6 col-lg-6 text-center">
+            <i class="bi bi-house-heart display-1 opacity-75"></i>
           </div>
         </div>
       </div>
@@ -21,22 +21,22 @@
 
     <!-- Features Section -->
     <section class="py-5">
-      <div class="container">
+      <div class="container-full">
         <div class="row text-center mb-5">
           <div class="col-12">
-            <h2 class="fw-bold">Why Choose PropertyRental Pro?</h2>
-            <p class="text-muted">Everything you need to manage your rental business</p>
+            <h2 class="display-5 fw-bold mb-3">Why Choose PropertyRental Pro?</h2>
+            <p class="text-muted fs-5">Everything you need to manage your rental business</p>
           </div>
         </div>
-        <div class="row g-4">
-          <div class="col-md-4" v-for="feature in features" :key="feature.title">
-            <div class="card border-0 shadow-sm h-100 text-center">
-              <div class="card-body p-4">
-                <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                  <i :class="feature.icon"></i>
+        <div class="row g-4 justify-content-center">
+          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6" v-for="feature in features" :key="feature.title">
+            <div class="card border-0 shadow-lg h-100 text-center hover-lift">
+              <div class="card-body p-5">
+                <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i :class="feature.icon" class="fs-3"></i>
                 </div>
-                <h5 class="fw-bold">{{ feature.title }}</h5>
-                <p class="text-muted">{{ feature.description }}</p>
+                <h4 class="fw-bold mb-3">{{ feature.title }}</h4>
+                <p class="text-muted mb-0">{{ feature.description }}</p>
               </div>
             </div>
           </div>
@@ -74,7 +74,20 @@ export default {
 </script>
 
 <style scoped>
-.min-vh-50 {
-  min-height: 50vh;
+.min-vh-70 {
+  min-height: 70vh;
+}
+
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.landing-page {
+  width: 100%;
 }
 </style>
